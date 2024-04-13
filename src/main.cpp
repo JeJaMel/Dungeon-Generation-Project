@@ -1,5 +1,5 @@
 #include "Graph.h"
-#include <iostream>
+#include "loadingBar.h"
 
 int main()
 {
@@ -33,9 +33,15 @@ int main()
 
         // User-controlled movement
         int current = start;
-        while (current != exit)
+        bool keyFound = false;
+        while (current != exit || !keyFound)
         {
             std::cout << "You are in chamber " << current << ".\n";
+            if (current == key)
+            {
+                std::cout << "You found the key!\n";
+                keyFound = true;
+            }
             std::cout << "You can move to the following chambers: ";
             for (int neighbor : dungeon.getChamber(current).getConnections())
             {
@@ -44,14 +50,28 @@ int main()
             std::cout << "\nWhich chamber do you want to move to? ";
             int next;
             std::cin >> next;
-            current = next;
+            if (next == exit && !keyFound)
+            {
+                std::cout << "You found the exit! but...\n";
+                std::cout << "You can't exit without the key \n";
+            }
+            else
+            {
+                current = next;
+            }
         }
 
         std::cout << "\nReached the exit!\n";
-        std::cout << "\nMoving to next level...\n";
+        if (level < 2) // Check if current level is not the last one
+        {
+            std::cout << "\nMoving to next level...\n";
+            loadingBar(duration, steps); // Display loading bar
+        }
     }
 
+    std::cout << "\n============================================\n";
     std::cout << "\nCongratulations! You've escaped the dungeon!\n";
+    std::cout << "\n============================================\n";
 
     return 0;
 }

@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <queue>
 #include <iostream>
+#include <windows.h>
 
 class Graph
 {
@@ -81,18 +82,28 @@ public:
         getChamber(key).setHasKey(true);
 
         // Randomly add connections between chambers
+        // Randomly add connections between chambers
         std::uniform_int_distribution<> dis1(1, 3); // for number of connections
         for (int i = 0; i < numChambers; i++)
         {
             int numConnections = dis1(gen);
             for (int j = 0; j < numConnections; j++)
             {
+                if (getChamber(i).getConnections().size() >= 3)
+                {
+                    break; // Skip to next chamber if this one already has 3 connections
+                }
+
                 int connectedChamber;
                 do
                 {
                     connectedChamber = dis(gen);
                 } while (connectedChamber == i || std::find(getChamber(i).getConnections().begin(), getChamber(i).getConnections().end(), connectedChamber) != getChamber(i).getConnections().end());
-                addEdge(i, connectedChamber);
+
+                if (getChamber(connectedChamber).getConnections().size() < 3)
+                {
+                    addEdge(i, connectedChamber);
+                }
             }
         }
     }
