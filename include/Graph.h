@@ -81,7 +81,6 @@ public:
         getChamber(key).setHasKey(true);
 
         // Randomly add connections between chambers
-        // Randomly add connections between chambers
         std::uniform_int_distribution<> dis1(1, 3); // for number of connections
         for (int i = 0; i < numChambers; i++)
         {
@@ -97,7 +96,7 @@ public:
                 do
                 {
                     connectedChamber = dis(gen);
-                } while (connectedChamber == i || std::find(getChamber(i).getConnections().begin(), getChamber(i).getConnections().end(), connectedChamber) != getChamber(i).getConnections().end());
+                } while (connectedChamber == i || connectedChamber == key || std::find(getChamber(i).getConnections().begin(), getChamber(i).getConnections().end(), connectedChamber) != getChamber(i).getConnections().end());
 
                 if (getChamber(connectedChamber).getConnections().size() < 3)
                 {
@@ -105,8 +104,23 @@ public:
                 }
             }
         }
-    }
 
+        // Ensure key chamber has at least two connections
+        while (getChamber(key).getConnections().size() < 2)
+        {
+            int connectedChamber;
+            do
+            {
+                connectedChamber = dis(gen);
+            } while (connectedChamber == key || connectedChamber == exit || std::find(getChamber(key).getConnections().begin(), getChamber(key).getConnections().end(), connectedChamber) != getChamber(key).getConnections().end());
+
+            if (getChamber(connectedChamber).getConnections().size() < 3)
+            {
+                addEdge(key, connectedChamber);
+            }
+        }
+    }
+    
     int *findShortestPath(int start, int end)
     {
         bool *visited = new bool[numVertices];

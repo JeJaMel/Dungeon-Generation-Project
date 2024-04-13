@@ -53,21 +53,53 @@ int main()
             {
                 std::cout << neighbor << " ";
             }
-            std::cout << "\nWhich chamber do you want to move to? ";
-            int next;
-            std::cin >> next;
-            if (next == exit && !keyFound)
+            std::cout << "\nWhich chamber do you want to move to? Or press 'S' ";
+            std::string input;
+            std::cin >> input;
+            if (input == "S" || input == "s")
             {
-                std::cout << "\n============================================\n";
-                std::cout << "You found the exit! but...\n";
-                SetColor(12); // Red color (12)
-                std::cout << "You can't exit without the key ";
-                SetColor(7);
-                std::cout << "\n============================================\n\n";
+                std::cout << "Shortest path from start to key: ";
+                int *path = dungeon.findShortestPath(start, key);
+                for (int i = 0; i < numChambers[level]; i++)
+                {
+                    if (path[i] == -1)
+                    {
+                        break;
+                    }
+                    std::cout << path[i] << " ";
+                }
+                std::cout << "\n";
+                delete[] path;
+
+                std::cout << "Shortest path from key to exit: ";
+                path = dungeon.findShortestPath(key, exit);
+                for (int i = 0; i < numChambers[level]; i++)
+                {
+                    if (path[i] == -1)
+                    {
+                        break;
+                    }
+                    std::cout << path[i] << " ";
+                }
+                std::cout << "\n";
+                delete[] path;
             }
             else
             {
-                current = next;
+                int next = std::stoi(input);
+                if (next == exit && !keyFound)
+                {
+                    std::cout << "\n============================================\n";
+                    std::cout << "You found the exit! but...\n";
+                    SetColor(12); // Red color (12)
+                    std::cout << "You can't exit without the key ";
+                    SetColor(7);
+                    std::cout << "\n============================================\n\n";
+                }
+                else
+                {
+                    current = next;
+                }
             }
         }
 
