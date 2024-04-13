@@ -1,10 +1,13 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
-#include <list>
 #include "Chamber.h"
+
+#include <list>
 #include <random>
 #include <algorithm>
+#include <queue>
+#include <iostream>
 
 class Graph
 {
@@ -92,6 +95,65 @@ public:
                 addEdge(i, connectedChamber);
             }
         }
+    }
+
+    int *findShortestPath(int start, int end)
+    {
+        bool *visited = new bool[numVertices];
+        int *prev = new int[numVertices];
+        std::queue<int> q;
+
+        for (int i = 0; i < numVertices; i++)
+        {
+            visited[i] = false;
+            prev[i] = -1;
+        }
+
+        visited[start] = true;
+        q.push(start);
+
+        while (!q.empty())
+        {
+            int current = q.front();
+            q.pop();
+
+            if (current == end)
+            {
+                break;
+            }
+
+            for (int neighbor : getChamber(current).getConnections())
+            {
+                if (!visited[neighbor])
+                {
+                    q.push(neighbor);
+                    visited[neighbor] = true;
+                    prev[neighbor] = current;
+                }
+            }
+        }
+
+        int *path = new int[numVertices];
+        int at = end;
+        int length = 0;
+        while (at != -1)
+        {
+            path[length] = at;
+            at = prev[at];
+            length++;
+        }
+
+        for (int i = 0; i < length / 2; i++)
+        {
+            int temp = path[i];
+            path[i] = path[length - i - 1];
+            path[length - i - 1] = temp;
+        }
+
+        delete[] visited;
+        delete[] prev;
+
+        return path;
     }
 };
 
