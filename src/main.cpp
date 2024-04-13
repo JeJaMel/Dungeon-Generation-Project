@@ -6,8 +6,10 @@ int main()
     int numChambers[3] = {5, 8, 15};
     for (int level = 0; level < 3; level++)
     {
+
         std::cout << "\n========================\n";
-        std::cout << "Entering Level " << level + 1 << "\n";
+        std::cout << "        Level " << level + 1
+                  << "\n";
         std::cout << "========================\n";
         Graph dungeon(numChambers[level]);
 
@@ -39,7 +41,11 @@ int main()
             std::cout << "You are in chamber " << current << ".\n";
             if (current == key)
             {
-                std::cout << "You found the key!\n";
+                std::cout << "\n============================================\n";
+                SetColor(10); // Green color (10)
+                std::cout << "You found the key!";
+                SetColor(7);
+                std::cout << "\n============================================\n\n";
                 keyFound = true;
             }
             std::cout << "You can move to the following chambers: ";
@@ -52,8 +58,12 @@ int main()
             std::cin >> next;
             if (next == exit && !keyFound)
             {
+                std::cout << "\n============================================\n";
                 std::cout << "You found the exit! but...\n";
-                std::cout << "You can't exit without the key \n";
+                SetColor(12); // Red color (12)
+                std::cout << "You can't exit without the key ";
+                SetColor(7);
+                std::cout << "\n============================================\n\n";
             }
             else
             {
@@ -66,11 +76,14 @@ int main()
         {
             std::cout << "\nMoving to next level...\n";
             loadingBar(duration, steps); // Display loading bar
+            system("cls");               // Clear the screen
         }
     }
 
     std::cout << "\n============================================\n";
+    SetColor(10); 
     std::cout << "\nCongratulations! You've escaped the dungeon!\n";
+    SetColor(7);
     std::cout << "\n============================================\n";
 
     return 0;

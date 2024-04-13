@@ -8,7 +8,6 @@
 #include <algorithm>
 #include <queue>
 #include <iostream>
-#include <windows.h>
 
 class Graph
 {
