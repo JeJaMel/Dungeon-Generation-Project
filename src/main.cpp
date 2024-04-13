@@ -58,29 +58,28 @@ int main()
             std::cin >> input;
             if (input == "S" || input == "s")
             {
+                std::cout << "\n============================================\n";
                 std::cout << "Shortest path from start to key: ";
-                int *path = dungeon.findShortestPath(start, key);
-                for (int i = 0; i < numChambers[level]; i++)
+                std::pair<int *, int> result = dungeon.findShortestPath(start, key);
+                int *path = result.first;
+                int length = result.second;
+                for (int i = 0; i < length; i++)
                 {
-                    if (path[i] == -1)
-                    {
-                        break;
-                    }
                     std::cout << path[i] << " ";
                 }
                 std::cout << "\n";
                 delete[] path;
 
                 std::cout << "Shortest path from key to exit: ";
-                path = dungeon.findShortestPath(key, exit);
-                for (int i = 0; i < numChambers[level]; i++)
+
+                result = dungeon.findShortestPath(key, exit);
+                path = result.first;
+                length = result.second;
+                for (int i = 0; i < length; i++)
                 {
-                    if (path[i] == -1)
-                    {
-                        break;
-                    }
                     std::cout << path[i] << " ";
                 }
+                std::cout << "\n============================================\n";
                 std::cout << "\n";
                 delete[] path;
             }
@@ -113,7 +112,7 @@ int main()
     }
 
     std::cout << "\n============================================\n";
-    SetColor(10); 
+    SetColor(10);
     std::cout << "\nCongratulations! You've escaped the dungeon!\n";
     SetColor(7);
     std::cout << "\n============================================\n";

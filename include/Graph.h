@@ -120,8 +120,8 @@ public:
             }
         }
     }
-    
-    int *findShortestPath(int start, int end)
+
+    std::pair<int *, int> findShortestPath(int start, int end)
     {
         bool *visited = new bool[numVertices];
         int *prev = new int[numVertices];
@@ -177,7 +177,7 @@ public:
         delete[] visited;
         delete[] prev;
 
-        return path;
+        return {path, length};
     }
 };
 
