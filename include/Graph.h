@@ -3,24 +3,20 @@
 
 #include <list>
 #include "Chamber.h"
-
-/*
-std::list is used to create an adjacency list for the graph.
-Each element in the list represents a node that is connected to the node
-represented by the index of the list.
-*/
+#include <random>
+#include <algorithm>
 
 class Graph
 {
 private:
     int numVertices;      
-    std::list<int> *adjList;
+    std::list<Chamber> *adjList;
 
 public:
     // Constructor
     Graph(int numVertices) : numVertices(numVertices)
     {
-        adjList = new std::list<int>[numVertices];
+        adjList = new std::list<Chamber>[numVertices];
     }
 
     // Destructor
@@ -29,15 +25,73 @@ public:
         delete[] adjList;
     }
 
-    void addEdge(int src, int dest)
+    Chamber &getChamber(int index)
     {
-        adjList[src].push_back(dest);
-        adjList[dest].push_back(src);
+        // Assuming each list in adjList contains one Chamber object
+        return adjList[index].front();
     }
 
-    const std::list<int> &getAdjacentVertices(int vertex) const
+    void addEdge(int src, int dest)
+    {
+        Chamber &srcChamber = getChamber(src);
+        Chamber &destChamber = getChamber(dest);
+
+        srcChamber.addConnection(dest);
+        destChamber.addConnection(src);
+    }
+
+    const std::list<Chamber> &getAdjacentVertices(int vertex) const
     {
         return adjList[vertex];
+    }
+
+    void generateDungeon(int numChambers)
+    {
+        // Create the chambers
+        for (int i = 0; i < numChambers; i++)
+        {
+            Chamber chamber;
+            adjList[i].push_back(chamber);
+        }
+
+        // Randomly choose the start chamber, exit chamber, and chamber with the key
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> dis(0, numChambers - 1);
+
+        int start = dis(gen);
+        int exit;
+        int key;
+
+        do
+        {
+            exit = dis(gen);
+        } while (exit == start);
+
+        do
+        {
+            key = dis(gen);
+        } while (key == start || key == exit);
+
+        getChamber(start).setIsStart(true);
+        getChamber(exit).setIsExit(true);
+        getChamber(key).setHasKey(true);
+
+        // Randomly add connections between chambers
+        std::uniform_int_distribution<> dis1(1, 3); // for number of connections
+        for (int i = 0; i < numChambers; i++)
+        {
+            int numConnections = dis1(gen);
+            for (int j = 0; j < numConnections; j++)
+            {
+                int connectedChamber;
+                do
+                {
+                    connectedChamber = dis(gen);
+                } while (connectedChamber == i || std::find(getChamber(i).getConnections().begin(), getChamber(i).getConnections().end(), connectedChamber) != getChamber(i).getConnections().end());
+                addEdge(i, connectedChamber);
+            }
+        }
     }
 };
 
