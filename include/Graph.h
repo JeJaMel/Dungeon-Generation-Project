@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <queue>
 #include <iostream>
+#include <conio.h>
 
 class Graph
 {

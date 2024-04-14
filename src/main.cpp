@@ -86,7 +86,22 @@ int main()
             else
             {
                 int next = std::stoi(input);
-                if (next == exit && !keyFound)
+                bool isConnected = false;
+                for (int neighbor : dungeon.getChamber(current).getConnections())
+                {
+                    if (neighbor == next)
+                    {
+                        isConnected = true;
+                        break;
+                    }
+                }
+                if (!isConnected)
+                {
+                    SetColor(12);
+                    std::cout << "You can't move to chamber " << next << " from the current chamber.\n";
+                    SetColor(7);
+                }
+                else if (next == exit && !keyFound)
                 {
                     std::cout << "\n============================================\n";
                     std::cout << "You found the exit! but...\n";
@@ -116,6 +131,7 @@ int main()
     std::cout << "\nCongratulations! You've escaped the dungeon!\n";
     SetColor(7);
     std::cout << "\n============================================\n";
+    getch();
 
     return 0;
 }
